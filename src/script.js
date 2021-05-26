@@ -1,6 +1,18 @@
 import './style.css'; 
 import * as THREE from 'three';
 import gsap from 'gsap';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+
+// cursor
+const cursor = {
+    x: 0,
+    y:0
+}
+window.addEventListener('mousemove', (event) => {
+    cursor.x = event.clientX /size.width - 0.5;
+    cursor.y = - (event.clientY /size.height - 0.5);
+})
+
 //Scene
 const scene = new THREE.Scene();
 
@@ -57,7 +69,9 @@ const size = {
     height: 600
 }
 //camera
-const camera = new THREE.PerspectiveCamera(75, size.width / size.height);
+const camera = new THREE.PerspectiveCamera(75, size.width / size.height, 0.1 , 100);
+// const aspectRatio = size.width/size.height;
+// const camera = new THREE.OrthographicCamera(-1 * aspectRatio, 1 * aspectRatio, 1, -1, 0.1, 100);
 camera.position.z=3;
 scene.add(camera);
 
@@ -70,21 +84,35 @@ const renderer = new THREE.WebGLRenderer({
 })
 renderer.setSize(size.width, size.height);
 
+// orbit controls
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true
+
+
 // renderer.render(scene, camera);
 
 // clock
 // const clock = new THREE.Clock();
 
-gsap.to(group.position, { duration: 1, delay: 1, x: 2 } );
+// gsap.to(group.position, { duration: 1, delay: 1, x: 2 } );
 
 // animations
 const tick = () => {
     // time
     // const elapsedTime = clock.getElapsedTime();
 
-    // // update objects
+    // update objects
     // group.position.y =Math.sin(elapsedTime);
     // group.position.x = Math.cos(elapsedTime);
+
+    // update camera with cursor
+    // camera.position.x = Math.sin(cursor.x * Math.PI * 2) * 3;
+    // camera.position.z = Math.cos(cursor.x * Math.PI * 2) * 3;
+    // camera.position.y = cursor.y * 5;
+    // camera.lookAt(new THREE.Vector3());
+
+    // update orbit controls 
+    controls.update();
 
     // render
     renderer.render(scene, camera);
