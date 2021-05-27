@@ -65,9 +65,50 @@ const axesHelper = new THREE.AxesHelper(2);
 scene.add(axesHelper);
 
 const size = {
-    width: 800,
-    height: 600
+    width: window.innerWidth,
+    height: window.innerHeight
 }
+
+window.addEventListener('resize', () => {
+    // update size
+    size.width = window.innerWidth,
+    size.height = window.innerWidth
+
+    // update camera
+    camera.aspect = size.width/size.height
+    camera.updateProjectionMatrix()
+
+    // update camera
+    renderer.setSize(size.width, size.height)
+    // limiting pixel ratio to 2
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+})
+
+// double click fullscreen
+window.addEventListener('dblclick', () => {
+    const fullscreenElement = document.fullscreenElement || document.webkitFullscreenElement;
+
+    if(!fullscreenElement){
+        if(canvas.requestFullscreen){
+            canvas.requestFullscreen()
+        }
+        else if(canvas.webkitRequestFullscreen){
+            canvas.webkitRequestFullscreen()
+        }
+    } else{
+        if(document.exitFullscreen){
+            document.exitFullscreen()
+        }
+        else if(document.webkitExitFullscreen){
+            document.webkitExitFullscreen()
+        }
+    }
+    // if(!document.fullscreenElement){
+    //     canvas.requestFullscreen();
+    // } else{
+    //     document.exitFullscreen()
+    // }
+})
 //camera
 const camera = new THREE.PerspectiveCamera(75, size.width / size.height, 0.1 , 100);
 // const aspectRatio = size.width/size.height;
