@@ -15,15 +15,46 @@ window.addEventListener('mousemove', (event) => {
     cursor.y = - (event.clientY / size.height - 0.5);
 })
 
+
+/* Texture */
+// const image = new Image();
+// const texture = new THREE.Texture(image);
+
+// image.onload = () =>{
+//     texture.needsUpdate = true;
+// }
+
+// image.src = 'door.jpg';
+
+const loadingManager = new THREE.LoadingManager();
+
+const textureLoader = new THREE.TextureLoader(loadingManager);
+const colorTexture = textureLoader.load('door.jpg');
+
+// colorTexture.repeat.x = 2;
+// colorTexture.repeat.y = 3;
+// colorTexture.wrapS = THREE.MirroredRepeatWrapping;
+// colorTexture.wrapT = THREE.MirroredRepeatWrapping;
+
+// colorTexture.offset.x = 0.5;
+// colorTexture.offset.y = 0.5;
+
+colorTexture.rotation = Math.PI * 0.25;
+colorTexture.center.x = 0.5;
+colorTexture.center.y = 0.5;
+
+colorTexture.generateMipmaps = false;
+colorTexture.minFilter = THREE.NearestFilter;
+
 /* Debug UI initialization*/
-const gui = new dat.GUI({ closed: true, width: 400});
+const gui = new dat.GUI({ closed: true, width: 400 });
 // to hide
 // gui.hide()
 
 const parameters = {
     color: 0xff0000,
-    spin: () =>{
-        gsap.to(mesh.rotation, { duration: 1, y: mesh.rotation.y + Math.PI *2})
+    spin: () => {
+        gsap.to(mesh.rotation, { duration: 1, y: mesh.rotation.y + Math.PI * 2 })
     }
 }
 
@@ -36,7 +67,7 @@ const size = {
 }
 /* Cube object or MESH */
 const geometry = new THREE.BoxBufferGeometry(1, 1, 1);
-const material = new THREE.MeshBasicMaterial({ color: parameters.color});
+const material = new THREE.MeshBasicMaterial({ map: colorTexture });
 
 
 /* custom geometry 1*/
@@ -129,7 +160,7 @@ gui
 // checkbox
 gui
     .add(mesh, 'visible');
-gui.add(material, 'wireframe');    
+gui.add(material, 'wireframe');
 // color
 gui
     .addColor(parameters, 'color')
