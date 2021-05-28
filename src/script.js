@@ -58,6 +58,7 @@ const parameters = {
     }
 }
 
+
 //Scene
 const scene = new THREE.Scene();
 
@@ -124,7 +125,33 @@ scene.add(mesh);
 // mesh.rotation.y = Math.PI * 0.25;
 // mesh.rotation.x = Math.PI * 0.25;
 
-// mesh group
+
+/* Texture */
+const CubeTextureLoader = new THREE.CubeTextureLoader();
+const environmentMapTexture = CubeTextureLoader.load([
+    '/environmentMaps/0/px.jpg',
+    '/environmentMaps/0/nx.jpg',
+    '/environmentMaps/0/py.jpg',
+    '/environmentMaps/0/ny.jpg',
+    '/environmentMaps/0/pz.jpg',
+    '/environmentMaps/0/nz.jpg'
+])
+/* material */
+const material2 = new THREE.MeshStandardMaterial();
+// material2.flatShading = true;
+material2.metalness = 0.7;
+material2.roughness = 0.2;
+material2.envMap = environmentMapTexture;
+
+const sphere = new THREE.Mesh(
+    new THREE.SphereBufferGeometry(0.5, 16, 16), material2
+)
+sphere.position.x = -2
+scene.add(sphere)
+
+
+
+/* mesh group */
 // const group = new THREE.Group();
 // scene.add(group);
 
