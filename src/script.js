@@ -2,6 +2,8 @@ import './style.css';
 import * as THREE from 'three';
 import gsap from 'gsap';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import * as dat from 'dat.gui';
+import { Mesh } from 'three';
 
 // cursor
 const cursor = {
@@ -13,6 +15,18 @@ window.addEventListener('mousemove', (event) => {
     cursor.y = - (event.clientY / size.height - 0.5);
 })
 
+/* Debug UI initialization*/
+const gui = new dat.GUI({ closed: true, width: 400});
+// to hide
+// gui.hide()
+
+const parameters = {
+    color: 0xff0000,
+    spin: () =>{
+        gsap.to(mesh.rotation, { duration: 1, y: mesh.rotation.y + Math.PI *2})
+    }
+}
+
 //Scene
 const scene = new THREE.Scene();
 
@@ -22,7 +36,7 @@ const size = {
 }
 /* Cube object or MESH */
 const geometry = new THREE.BoxBufferGeometry(1, 1, 1);
-const material = new THREE.MeshBasicMaterial({ color: 0xde4a36, wireframe:true });
+const material = new THREE.MeshBasicMaterial({ color: parameters.color});
 
 
 /* custom geometry 1*/
@@ -103,6 +117,28 @@ scene.add(mesh);
 // cube3.position.x = 2;
 // group.add(cube3);
 
+/* debug */
+//                         min, max, precision
+// gui.add(mesh.position, 'y', -3, 3, 0.01);
+gui
+    .add(mesh.position, 'y')
+    .min(-3)
+    .max(3)
+    .step(0.01)
+    .name('elevation');
+// checkbox
+gui
+    .add(mesh, 'visible');
+gui.add(material, 'wireframe');    
+// color
+gui
+    .addColor(parameters, 'color')
+    .onChange(() => {
+        material.color.set(parameters.color);
+    });
+// button rotation
+gui
+    .add(parameters, 'spin');
 
 
 //Axes Helper
