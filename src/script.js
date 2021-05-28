@@ -3,7 +3,6 @@ import * as THREE from 'three';
 import gsap from 'gsap';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as dat from 'dat.gui';
-import { Mesh } from 'three';
 
 // cursor
 const cursor = {
@@ -14,6 +13,8 @@ window.addEventListener('mousemove', (event) => {
     cursor.x = event.clientX / size.width - 0.5;
     cursor.y = - (event.clientY / size.height - 0.5);
 })
+
+
 
 
 /* Texture */
@@ -46,6 +47,43 @@ colorTexture.center.y = 0.5;
 colorTexture.generateMipmaps = false;
 colorTexture.minFilter = THREE.NearestFilter;
 
+
+/* font loader*/
+
+const fontLoader = new THREE.FontLoader()
+
+fontLoader.load(
+    'fonts/helvetiker_regular.typeface.json',
+    (font) => {
+        const textGeometry = new THREE.TextBufferGeometry(
+            'MADHAB',
+            {
+                font: font,
+                size: 0.5,
+                height: 0.2,
+                curveSegments: 6,
+                bevelEnabled: true,
+                bevelThickness: 0.03,
+                bevelSize: 0.02,
+                bevelOffset: 0,
+                bevelSegments: 5
+            }
+        )
+        // textGeometry.computeBoundingBox();
+        // textGeometry.translate(
+        //     - (textGeometry.boundingBox.max.x - 0.02) * 0.5,
+        //     - (textGeometry.boundingBox.max.y - 0.02) * 0.5,
+        //     -( textGeometry.boundingBox.max.z - 0.03) * 0.5
+        // )
+
+        textGeometry.center();
+        const textMaterial = new THREE.MeshMatcapMaterial({ matcap: colorTexture});
+        const text = new THREE.Mesh(textGeometry, textMaterial);
+        scene.add(text);
+    }
+)
+
+
 /* Debug UI initialization*/
 const gui = new dat.GUI({ closed: true, width: 400 });
 // to hide
@@ -66,6 +104,7 @@ const size = {
     width: window.innerWidth,
     height: window.innerHeight
 }
+
 /* Cube object or MESH */
 const geometry = new THREE.BoxBufferGeometry(1, 1, 1);
 const material = new THREE.MeshBasicMaterial({ map: colorTexture });
@@ -109,6 +148,7 @@ const material = new THREE.MeshBasicMaterial({ map: colorTexture });
 
 /* adding geometry to scene */
 const mesh = new THREE.Mesh(geometry, material);
+mesh.position.y = -1
 scene.add(mesh);
 
 // // position
