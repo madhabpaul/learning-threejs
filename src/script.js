@@ -107,7 +107,7 @@ const size = {
 
 /* Cube object or MESH */
 const geometry = new THREE.BoxBufferGeometry(1, 1, 1);
-const material = new THREE.MeshBasicMaterial({ map: colorTexture });
+const material = new THREE.MeshStandardMaterial({ color: parameters.color});
 
 
 /* custom geometry 1*/
@@ -239,6 +239,27 @@ gui
     .add(parameters, 'spin');
 
 
+
+/* lights */
+const ambientLight = new THREE.AmbientLight(0xfffff, 0.5)
+scene.add(ambientLight); 
+
+const directionalLight = new THREE.DirectionalLight(0xff547e, 0.3);
+directionalLight.position.set(1, 0.25, 0);
+scene.add(directionalLight)
+
+const hemisphereLight = new THREE.HemisphereLight(0xff547e, 0x0000ff, 0.3);
+scene.add(hemisphereLight)
+
+const pointLight = new THREE.PointLight(0xe75428, 0.5, 10, 2);
+pointLight.position.set(1, -0.5, 1)
+scene.add(pointLight);
+
+const rectLight = new THREE.RectAreaLight( 0x4e20ff, 1,  1, 1 );
+rectLight.position.set( -1.5, 0, 1.5 );
+rectLight.lookAt( 0, 0, 0 );
+scene.add( rectLight )
+
 //Axes Helper
 const axesHelper = new THREE.AxesHelper(2);
 scene.add(axesHelper);
@@ -254,13 +275,13 @@ window.addEventListener('resize', () => {
     camera.aspect = size.width / size.height
     camera.updateProjectionMatrix()
 
-    // update camera
+    // update render size
     renderer.setSize(size.width, size.height)
     // limiting pixel ratio to 2
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 })
 
-// double click fullscreen
+/* double click fullscreen */
 window.addEventListener('dblclick', () => {
     const fullscreenElement = document.fullscreenElement || document.webkitFullscreenElement;
 
